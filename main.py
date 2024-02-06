@@ -1,25 +1,88 @@
-from kivy.app import App
-from kivy.uix.boxlayout import BoxLayout
-from kivy.uix.screenmanager import ScreenManager, Screen
-from kivy.core.window import Window
+// App.tsx
+import React, { useState } from 'react';
+import { StyleSheet, View, TextInput, Text, TouchableOpacity, ImageBackground } from 'react-native';
 
-class LoginScreen(Screen):
-    def check_credentials(self):
-        if self.ids.username.text == 'Hakan' and self.ids.password.text == '00000':
-            self.manager.current = 'main_screen'
+const LoginScreen = () => {
+  const [username, setUsername] = useState('');
+  const [password, setPassword] = useState('');
 
-class MainScreen(Screen):
-    pass
+  const handleLogin = () => {
+    // Burada giriş mantığınızı ekleyin
+    console.log('Login pressed', username, password);
+  };
 
-class CoolPoolApp(App):
-    def build(self):
-        sm = ScreenManager()
-        sm.add_widget(LoginScreen(name='login_screen'))
-        sm.add_widget(MainScreen(name='main_screen'))
+  return (
+    <ImageBackground 
+      source={{ uri: 'https://raw.githubusercontent.com/hakanovski/CoolPool/main/coolpool_main_login_bg.jpeg' }} // GitHub'dan alınan doğrudan resim URL'si
+      style={styles.backgroundImage}
+    >
+      <View style={styles.container}>
+        <TextInput
+          style={styles.input}
+          onChangeText={setUsername}
+          value={username}
+          placeholder="username"
+        />
+        <TextInput
+          style={styles.input}
+          onChangeText={setPassword}
+          value={password}
+          placeholder="password"
+          secureTextEntry
+        />
+        <TouchableOpacity onPress={handleLogin} style={styles.button}>
+          <Text style={styles.buttonText}>Login</Text>
+        </TouchableOpacity>
+        <Text style={styles.forgotPassword}>Forgot your password?</Text>
+      </View>
+    </ImageBackground>
+  );
+};
 
-        Window.clearcolor = (0.68, 0.78, 0.81, 1)  # Pastel blue background color
-        return sm
+const styles = StyleSheet.create({
+  backgroundImage: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  container: {
+    width: '80%',
+    backgroundColor: 'rgba(255, 255, 255, 0.7)',
+    padding: 20,
+    borderRadius: 10,
+    alignItems: 'center',
+    elevation: 10,
+    shadowOpacity: 0.3,
+    shadowRadius: 20,
+  },
+  input: {
+    width: '100%',
+    padding: 15,
+    marginBottom: 10,
+    borderRadius: 5,
+    backgroundColor: '#fff',
+  },
+  button: {
+    width: '100%',
+    padding: 15,
+    borderRadius: 5,
+    backgroundColor: '#1E90FF',
+    alignItems: 'center',
+  },
+  buttonText: {
+    color: '#fff',
+    fontWeight: 'bold',
+  },
+  forgotPassword: {
+    marginTop: 15,
+    color: '#1E90FF',
+  },
+});
 
-if __name__ == '__main__':
-    CoolPoolApp().run()
+const App = () => {
+  return (
+    <LoginScreen />
+  );
+};
 
+export default App;
