@@ -1,33 +1,65 @@
-// App.tsx
-import React, { useState } from 'react';
-import { StyleSheet, View, TextInput, Text, TouchableOpacity, ImageBackground } from 'react-native';
+import React, {useState} from 'react';
+import {NavigationContainer} from '@react-navigation/native';
+import {
+  createNativeStackNavigator,
+  NativeStackNavigationProp,
+} from '@react-navigation/native-stack';
+import {
+  StyleSheet,
+  View,
+  TextInput,
+  Text,
+  TouchableOpacity,
+  ImageBackground,
+  Alert,
+} from 'react-native';
 
-const LoginScreen = () => {
+type RootStackParamList = {
+  Home: undefined;
+  Login: undefined;
+};
+
+type LoginScreenProps = {
+  navigation: NativeStackNavigationProp<RootStackParamList, 'Login'>;
+};
+
+const Stack = createNativeStackNavigator<RootStackParamList>();
+
+const LoginScreen: React.FC<LoginScreenProps> = ({navigation}) => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
 
   const handleLogin = () => {
-    // Burada giriş mantığınızı ekleyin
-    console.log('Login pressed', username, password);
+    if (username === 'Hakan' && password === '00000') {
+      navigation.navigate('Home');
+    } else {
+      Alert.alert(
+        'Invalid credentials',
+        'The username or password you entered is incorrect.',
+      );
+    }
   };
 
   return (
-    <ImageBackground 
-      source={{ uri: 'https://raw.githubusercontent.com/hakanovski/CoolPool/main/coolpool_main_login_bg.jpeg' }} // GitHub'dan alınan doğrudan resim URL'si
-      style={styles.backgroundImage}
-    >
+    <ImageBackground
+      source={{
+        uri: 'https://raw.githubusercontent.com/hakanovski/CoolPool/main/coolpool_main_login_bg.jpeg',
+      }}
+      style={styles.backgroundImage}>
       <View style={styles.container}>
         <TextInput
           style={styles.input}
           onChangeText={setUsername}
           value={username}
-          placeholder="username"
+          placeholder="Enter Your Username"
+          placeholderTextColor="grey"
         />
         <TextInput
           style={styles.input}
           onChangeText={setPassword}
           value={password}
-          placeholder="password"
+          placeholder="Enter Your Password"
+          placeholderTextColor="grey"
           secureTextEntry
         />
         <TouchableOpacity onPress={handleLogin} style={styles.button}>
@@ -36,6 +68,33 @@ const LoginScreen = () => {
         <Text style={styles.forgotPassword}>Forgot your password?</Text>
       </View>
     </ImageBackground>
+  );
+};
+
+const HomeScreen = () => {
+  return (
+    <View style={styles.homeScreenContainer}>
+      <Text>Welcome to CoolPool!</Text>
+    </View>
+  );
+};
+
+const App = () => {
+  return (
+    <NavigationContainer>
+      <Stack.Navigator>
+        <Stack.Screen
+          name="Login"
+          component={LoginScreen}
+          options={{title: 'Login'}}
+        />
+        <Stack.Screen
+          name="Home"
+          component={HomeScreen}
+          options={{title: 'Home'}}
+        />
+      </Stack.Navigator>
+    </NavigationContainer>
   );
 };
 
@@ -51,7 +110,6 @@ const styles = StyleSheet.create({
     padding: 20,
     borderRadius: 10,
     alignItems: 'center',
-    elevation: 10,
     shadowOpacity: 0.3,
     shadowRadius: 20,
   },
@@ -61,6 +119,7 @@ const styles = StyleSheet.create({
     marginBottom: 10,
     borderRadius: 5,
     backgroundColor: '#fff',
+    color: 'black', // Doğru olan bu şekilde kullanımıdır.
   },
   button: {
     width: '100%',
@@ -77,12 +136,11 @@ const styles = StyleSheet.create({
     marginTop: 15,
     color: '#1E90FF',
   },
+  homeScreenContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
 });
-
-const App = () => {
-  return (
-    <LoginScreen />
-  );
-};
 
 export default App;
